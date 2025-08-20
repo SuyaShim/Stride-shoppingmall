@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopping-mall-v2
+  namespace: stride-suya
+  labels:
+    app: shopping-mall-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shopping-mall-v2
+  template:
+    metadata:
+      labels:
+        app: shopping-mall-v2
+    spec:
+      containers:
+      - name: shopping-mall
+        image: public.ecr.aws/e3w6j8z3/suya/stride:v2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            memory: "128Mi" 
+            cpu: "100m"  
+          limits:
+            memory: "256Mi" 
+            cpu: "200m" 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopping-mall-v2-service
+  namespace: stride-suya
+spec:
+  selector:
+    app: shopping-mall-v2
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
